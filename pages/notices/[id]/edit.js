@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import NoticeForm from "../../../components/NoticeForm";
 
 export default function EditNotice() {
@@ -26,13 +27,22 @@ export default function EditNotice() {
       });
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (notFound) return <p>Notice not found.</p>;
-
   return (
-    <div>
-      <h1>Edit Notice</h1>
-      <NoticeForm initialData={notice} noticeId={id} />
+    <div className="page">
+      <div className="page-header">
+        <h1>Edit Notice</h1>
+        <Link href="/" className="btn btn-secondary">
+          ← Back to Notices
+        </Link>
+      </div>
+
+      {loading && <p className="state-message">Loading…</p>}
+      {!loading && notFound && (
+        <p className="state-message">Notice not found.</p>
+      )}
+      {!loading && !notFound && (
+        <NoticeForm initialData={notice} noticeId={id} />
+      )}
     </div>
   );
 }

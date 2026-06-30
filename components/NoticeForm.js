@@ -43,57 +43,71 @@ export default function NoticeForm({ initialData, noticeId }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form">
       {errors.length > 0 && (
-        <ul style={{ color: "red" }}>
-          {errors.map((err, i) => (
-            <li key={i}>{err}</li>
-          ))}
-        </ul>
+        <div className="form-errors">
+          <ul>
+            {errors.map((err, i) => (
+              <li key={i}>{err}</li>
+            ))}
+          </ul>
+        </div>
       )}
 
-      <div>
-        <label>Title</label>
-        <br />
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+      <div className="field">
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
 
-      <div>
-        <label>Body</label>
-        <br />
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} />
+      <div className="field">
+        <label htmlFor="body">Body</label>
+        <textarea
+          id="body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
       </div>
 
-      <div>
-        <label>Category</label>
-        <br />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+      <div className="field">
+        <label htmlFor="category">Category</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option value="Exam">Exam</option>
           <option value="Event">Event</option>
           <option value="General">General</option>
         </select>
       </div>
 
-      <div>
-        <label>Priority</label>
-        <br />
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+      <div className="field">
+        <label htmlFor="priority">Priority</label>
+        <select
+          id="priority"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+        >
           <option value="Normal">Normal</option>
           <option value="Urgent">Urgent</option>
         </select>
       </div>
 
-      <div>
-        <label>Publish Date</label>
-        <br />
+      <div className="field">
+        <label htmlFor="publishDate">Publish Date</label>
         <input
+          id="publishDate"
           type="date"
           value={publishDate}
           onChange={(e) => setPublishDate(e.target.value)}
         />
       </div>
 
-      <button type="submit" disabled={submitting}>
+      <button type="submit" className="btn btn-primary" disabled={submitting}>
         {submitting ? "Saving..." : isEdit ? "Update Notice" : "Create Notice"}
       </button>
     </form>

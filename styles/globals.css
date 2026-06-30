@@ -1,26 +1,321 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------
+   DESIGN TOKENS
+   Single source of truth for color, spacing and radius. Change a
+   value here and it updates everywhere it's used below.
+   ----------------------------------------------------------------*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e2e8f0;
+
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+
+  --color-urgent: #dc2626;
+  --color-urgent-bg: #fef2f2;
+  --color-urgent-border: #fecaca;
+
+  --radius: 10px;
+  --radius-sm: 8px;
+
+  --space-xs: 0.4rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+
+  --shadow-card:
+    0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---------------------------------------------------------------
+   BASE
+   ----------------------------------------------------------------*/
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------
+   PAGE LAYOUT
+   .page centers content and gives every screen consistent side
+   padding. .page-header lays the title and the primary action out
+   in a row, and wraps to two lines on narrow screens automatically
+   because of flex-wrap (no extra breakpoint needed).
+   ----------------------------------------------------------------*/
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md) 4rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.page-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------
+   RESPONSIVE NOTICE GRID
+   This single rule is what makes the card list responsive:
+   - "auto-fill" tells the grid to fit as many columns as will
+     physically fit in the row.
+   - "minmax(280px, 1fr)" tells it each column must be at least
+     280px wide, but can stretch to share leftover space equally.
+   On a phone, only one 280px column fits -> automatic single
+   column. On a tablet/desktop, 2-4 columns fit automatically.
+   No @media breakpoints required for the grid itself.
+   ----------------------------------------------------------------*/
+.notice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+/* ---------------------------------------------------------------
+   NOTICE CARD
+   display:flex + flex-direction:column on the card, combined with
+   flex-grow:1 on the body and margin-top:auto on the actions row,
+   keeps every "Edit / Delete" row pinned to the bottom of the card
+   even when notice bodies are different lengths.
+   ----------------------------------------------------------------*/
+.notice-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.notice-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.notice-card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.notice-card__body {
+  flex-grow: 1;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 var(--space-sm);
+
+  /* clamp long notice bodies to 4 lines so cards in the same row
+     stay roughly the same height, with "…" added automatically */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notice-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.notice-card__actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: auto;
+  padding-top: var(--space-xs);
+}
+
+/* ---------------------------------------------------------------
+   BADGES
+   One shared .badge shape, two color variants. The Urgent variant
+   is the one the assignment requires to be red and visible.
+   ----------------------------------------------------------------*/
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.badge--urgent {
+  background: var(--color-urgent-bg);
+  color: var(--color-urgent);
+  border: 1px solid var(--color-urgent-border);
+}
+
+.badge--category {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------
+   BUTTONS
+   One base .btn shape, three color variants layered on top.
+   ----------------------------------------------------------------*/
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-muted);
+}
+
+.btn-danger {
+  background: var(--color-surface);
+  color: var(--color-urgent);
+  border-color: var(--color-urgent-border);
+}
+.btn-danger:hover {
+  background: var(--color-urgent-bg);
+}
+
+/* ---------------------------------------------------------------
+   FORM (shared by Add and Edit, since both use NoticeForm)
+   ----------------------------------------------------------------*/
+.form {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea,
+.field select {
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.7rem;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.form-errors {
+  background: var(--color-urgent-bg);
+  border: 1px solid var(--color-urgent-border);
+  color: var(--color-urgent);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.875rem;
+}
+
+.form-errors ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+/* ---------------------------------------------------------------
+   LOADING / EMPTY / ERROR TEXT
+   ----------------------------------------------------------------*/
+.state-message {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 3rem 1rem;
+  font-size: 0.95rem;
 }
