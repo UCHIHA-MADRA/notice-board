@@ -14,35 +14,45 @@ A full CRUD notice board built for the Reno Platforms Web Development Internship
 ## Running Locally
 
 1. Clone the repository:
+
+   ```
    git clone https://github.com/UCHIHA-MADRA/notice-board.git
    cd notice-board
+   ```
 
 2. Install dependencies:
 
+   ```
    npm install
+   ```
 
-   
 3. Create a `.env` file in the project root with your own database connection string:
-   DATABASE_URL="mysql://USERNAME:PASSWORD@HOST:4000/DATABASE_NAME?sslaccept=strict&tls=true&connect_timeout=30&pool_timeout=30&connection_limit=1"
 
-This project uses TiDB Cloud Serverless (free tier). You can get a connection string by creating a free cluster at [tidbcloud.com](https://tidbcloud.com).
+   ```
+   DATABASE_URL="mysql://USERNAME:PASSWORD@HOST:4000/DATABASE_NAME?sslaccept=strict&tls=true&connect_timeout=30&pool_timeout=30&connection_limit=1"
+   ```
+
+   This project uses TiDB Cloud Serverless (free tier). You can get a connection string by creating a free cluster at [tidbcloud.com](https://tidbcloud.com).
 
 4. Push the Prisma schema to your database:
+
+   ```
    npx prisma db push
+   ```
 
 5. Run the development server:
 
+   ```
    npm run dev
+   ```
 
-   
-7. 6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## One Thing I'd Improve With More Time
 
 The validation logic for notice fields (checking required fields, valid category/priority values, and valid dates) is currently duplicated between the POST handler in `pages/api/notices/index.js` and the PUT handler in `pages/api/notices/[id].js`. With more time, I'd extract this into a shared helper function (e.g. `lib/validateNotice.js`) that both routes import and call, so validation rules only need to be defined and maintained in one place.
 
 Beyond that, the bigger improvement would be authentication and role-based access — right now anyone with the link can create, edit, or delete any notice, which works for this assignment's scope but wouldn't be production-ready. With more time, I'd add proper login (e.g. NextAuth) and split the app into two views: an admin/staff dashboard for creating and managing notices, and a read-only student/recruiter-facing view for browsing them. This would also open the door to features like per-notice audit history (who posted or edited what, and when) and targeted notices (e.g. visible only to a specific batch or department).
-
 
 ## AI Usage
 
